@@ -5,15 +5,16 @@ public class SpeedDisplay : MonoBehaviour
 {
     TMP_Text text;
 
-    RealisticCarController car;
+    [SerializeField]
+    Rigidbody car;
 
     private void Start()
     {
         text = GetComponent<TMP_Text>();
-        car = FindAnyObjectByType<RealisticCarController>();
     }
 
     private void Update()
     {
+        text.text = car.linearVelocity.magnitude.ToString() + " km/h";
     }
 }

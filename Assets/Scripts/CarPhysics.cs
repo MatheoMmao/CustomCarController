@@ -47,8 +47,16 @@ public class CarPhysics: MonoBehaviour
     [Range(0f,1f)]
     float transmissionEfficiency = 0.7f;
     [SerializeField]
+    Vector3 centerOfGravity;
+
+    [Header("Wheels")]
+    [SerializeField]
     [NotNull]
     float wheelRadius = 0.34f;
+    [SerializeField]
+    WheelControl[] wheelControls;
+    [SerializeField]
+    float wheelFrictionCoef = 1.5f;
 
     [Header("Forces")]
     [SerializeField]
@@ -67,22 +75,78 @@ public class CarPhysics: MonoBehaviour
     Vector2 acceleration;
     [SerializeField]
     float engineTorque;
+    [SerializeField]
+    float wheelTorque;
+    [SerializeField]
+    float[] wheelMaxFriction;
+
+    Rigidbody rb;
+    Vector2 wheelBase;
+    float[] wheelWeightSupported;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        wheelWeightSupported = new float[wheelControls.Length];
+        wheelMaxFriction= new float[wheelControls.Length];
+
+        Vector3 frontMaxWheelPos = wheelControls[0].transform.position;
+        Vector3 rearMaxWheelPos = wheelControls[0].transform.position;
+        Vector3 leftMaxWheelPos = wheelControls[0].transform.position;
+        Vector3 rightMaxWheelPos = wheelControls[0].transform.position;
+        foreach (var control in wheelControls)
+        {
+            if (control.transform.position.z > frontMaxWheelPos.z)
+            {
+                frontMaxWheelPos = control.transform.position;
+            }
+            if (control.transform.position.z < rearMaxWheelPos.z)
+            {
+                rearMaxWheelPos= control.transform.position;
+            }
+            if (control.transform.position.x > rightMaxWheelPos.x)
+            {
+                rightMaxWheelPos= control.transform.position;
+            }
+            if (control.transform.position.x < leftMaxWheelPos.x)
+            {
+                leftMaxWheelPos= control.transform.position;
+            }
+        }
+
+        wheelBase = new Vector2(frontMaxWheelPos.z-rearMaxWheelPos.z, rightMaxWheelPos.x-leftMaxWheelPos.x);
+    }
+
+    private void FixedUpdate()
+    {
+        RPM = Mathf.Clamp(RPM, minEngineRPM, maxEngineRPM);
+        engineTorque = GetEngineTorque(RPM);
+
+        wheelTorque = CalculateWheelTorque(engineTorque, gearRatio, differentialRatio, transmissionEfficiency, wheelRadius);
+        dragForce = CalculateDragForce(frictionCoef, frontalArea, airDensity, velocity);
+        rollResistanceForce = CalculateRollResistanceForce(rollResistance, velocity);
+        longitudinalForce = CalculateLongitudinalForce(tractionForce, dragForce, rollResistanceForce);
+
+        acceleration = CalculateAcceleration(longitudinalForce, mass);
+
+        for (int i = 0; i < wheelControls.Length; i++)
+        {
+            Vector2 wheelPos = new Vector2(wheelControls[i].transform.localPosition.z - centerOfGravity.z, wheelControls[i].transform.localPosition.x - centerOfGravity.x);
+            wheelWeightSupported[i] = CalculateWheelWeightSupported(wheelPos, wheelBase.x, mass, centerOfGravity.y, acceleration);
+            wheelMaxFriction[i] = CalculateWheelMaxFriction(wheelFrictionCoef, wheelWeightSupported[i]);
+        }
+
+        velocity += Time.fixedDeltaTime * acceleration;
+    }
 
     float GetEngineTorque(float RPM)
     {
         return RPMToTorqueCurve.Evaluate((RPM - minEngineRPM)/(maxEngineRPM-minEngineRPM)) * (maxEngineTorque - minEngineTorque) + minEngineTorque;
     }
 
-    Vector2 CalculateTractionForce(Vector2 direction, float torqueEngine, float gearRatio, float differentialRatio, float transmissionEfficiency, float wheelRadius)
+    float CalculateWheelTorque(float torqueEngine, float gearRatio, float differentialRatio, float transmissionEfficiency, float wheelRadius)
     {
-        Vector2 normalized = direction.normalized;
-
-        // Add a small value of direction to avoid unable to move (x*0=0)
-        if (normalized.magnitude==0)
-        {
-            normalized += Vector2.right * 0.0001f;
-        }
-        return normalized * torqueEngine * gearRatio * differentialRatio * transmissionEfficiency / wheelRadius;
+        return torqueEngine * gearRatio * differentialRatio * transmissionEfficiency / wheelRadius;
     }
 
     Vector2 CalculateDragForce(float frictionCoef, float frontalArea, float airDensity, Vector2 velocity)
@@ -105,17 +169,15 @@ public class CarPhysics: MonoBehaviour
         return netForce / mass;
     }
 
-    private void FixedUpdate()
+    float CalculateWheelWeightSupported(Vector2 wheelPos, float wheelBase, float carMass, float heightCG, Vector2 acceleration)
     {
-        RPM = Mathf.Clamp(RPM, minEngineRPM, maxEngineRPM);
-        engineTorque = GetEngineTorque(RPM);
+        float coefWheelPos = -(wheelPos.x != 0 ? wheelPos.x / Mathf.Abs(wheelPos.x) : 1);
 
-        tractionForce = CalculateTractionForce(velocity, engineTorque, gearRatio, differentialRatio, transmissionEfficiency, wheelRadius);
-        dragForce = CalculateDragForce(frictionCoef, frontalArea, airDensity, velocity);
-        rollResistanceForce = CalculateRollResistanceForce(rollResistance, velocity);
-        longitudinalForce = CalculateLongitudinalForce(tractionForce, dragForce, rollResistanceForce);
+        return (Mathf.Abs(wheelPos.x) / wheelBase) * carMass * 9.81f + (heightCG / wheelBase) * carMass * acceleration.x * coefWheelPos;
+    }
 
-        acceleration = CalculateAcceleration(longitudinalForce, mass);
-        velocity += Time.fixedDeltaTime * acceleration;
+    float CalculateWheelMaxFriction(float frictionCoef, float weightSupported)
+    {
+        return frictionCoef * weightSupported;
     }
 }
