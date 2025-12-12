@@ -4,11 +4,9 @@ using UnityEngine.InputSystem.HID;
 
 public class MyWheelCollider : MonoBehaviour
 {
-    [Header("New")]
     [SerializeField] bool steerable = false;
     [SerializeField] bool motorized = false;
 
-    [Header("Old")]
     [Header("Suspension")]
     [SerializeField] private float minSpringLength = 0.05f; // Recomended to not put 0 as the min distance
     [SerializeField] private float springLength = 1f;
@@ -20,6 +18,8 @@ public class MyWheelCollider : MonoBehaviour
     [Header("Wheel")]
     [SerializeField] private float wheelRadius = 0.25f;
     [SerializeField] private Transform wheelTransform; // Visual wheel
+    [SerializeField] private float maxAngleSteer = 30f;
+    private float angleSteer = 0f;
 
     [Header("Vehicle")]
     [SerializeField] private Rigidbody carRigidbody;
@@ -34,6 +34,17 @@ public class MyWheelCollider : MonoBehaviour
     public bool debugWheel = false;
     bool grounded = false;
 
+    Material visualWheelMaterial;
+
+    RaycastHit hit;
+    bool hasRaycastHit;
+
+
+    // Debug
+    float upForce;
+    float rightForce;
+    float forwardForce;
+
     private void Start()
     {
         restLength = springLength * restRatio;
@@ -41,30 +52,88 @@ public class MyWheelCollider : MonoBehaviour
         springVelocity = 0f;
 
         if (wheelTransform != null)
-            wheelVisualStartLocalPos = wheelTransform.localPosition; // save starting position
+        {
+            wheelVisualStartLocalPos = wheelTransform.localPosition + Vector3.up * restLength; // save starting position
+            visualWheelMaterial = wheelTransform.GetComponent<MeshRenderer>()?.material;
+        }
         else
             Debug.LogError("No wheelTransform (visual wheel) has been assigned!");
     }
 
     private void FixedUpdate()
     {
-        UpdateWheelUpForce();
+        CheckGroundedState();
+        UpdateWheelSuspensionForce();
+        UpdateWheelSteerForce();
+        UpdateAccelerationForce();
+    }
 
+    void CheckGroundedState()
+    {
+        Ray ray = new Ray(transform.position, -transform.up);
+
+        // Reset states
+        grounded = false;
+        hasRaycastHit = false;
+        if (debugWheel)
+        {
+            visualWheelMaterial.color = Color.red;
+        }
+
+        if (Physics.Raycast(ray, out hit, springLength + wheelRadius))
+        {
+            hasRaycastHit = true;
+            if (hit.distance < wheelTransform.localPosition.y - wheelVisualStartLocalPos.y + springLength + wheelRadius)
+            {
+                grounded = true;
+                if (debugWheel)
+                {
+                    visualWheelMaterial.color = Color.green;
+                }
+            }
+        }
+    }
+
+    private void UpdateAccelerationForce()
+    {
+        forwardForce = 0f;
         if (grounded)
         {
-            // Temporary steer and acceleration to test suspension
-            if (steerable)
-            {
-                float dir = Input.GetAxis("Horizontal");
-
-                carRigidbody.AddForceAtPosition(dir * transform.right * 1000, transform.position);
-            }
-
+            // Temporary acceleration and resistance force
             if (motorized)
             {
                 float move = Input.GetAxis("Vertical");
 
+                forwardForce += move * 3000;
+
                 carRigidbody.AddForceAtPosition(move * transform.forward * 3000, transform.position);
+            }
+
+            Vector3 velocity = carRigidbody.GetPointVelocity(transform.position);
+
+            float carSpeed = Vector3.Dot(transform.forward, velocity);
+
+            forwardForce += (-carSpeed / 0.5f) / Time.fixedDeltaTime;
+
+            carRigidbody.AddForceAtPosition((-carSpeed * 0.5f) / Time.fixedDeltaTime * transform.forward, transform.position);
+        }
+    }
+
+    private void UpdateWheelSteerForce()
+    {
+        rightForce = 0f;
+        if (grounded)
+        {
+            // Temporary steer and resistance force
+            if (steerable)
+            {
+                Vector3 steeringDir = Vector3.
+
+                float dir = Input.GetAxis("Horizontal");
+
+                rightForce += dir * 1000;
+
+                carRigidbody.AddForceAtPosition(dir * transform.right * 3000, transform.position);
             }
 
             Vector3 velocity = carRigidbody.GetPointVelocity(transform.position);
@@ -73,24 +142,17 @@ public class MyWheelCollider : MonoBehaviour
 
             float acceleration = -(steeringVelocity * 0.5f) / Time.fixedDeltaTime;
 
+            rightForce += acceleration * wheelMass;
             carRigidbody.AddForceAtPosition(transform.right * acceleration * wheelMass, transform.position);
-
-            float carSpeed = Vector3.Dot(transform.forward, velocity);
-
-
-            carRigidbody.AddForceAtPosition((-carSpeed * 0.5f) / Time.fixedDeltaTime * transform.forward, transform.position);
         }
     }
 
 
-    void UpdateWheelUpForce()
+    void UpdateWheelSuspensionForce()
     {
-        Ray ray = new Ray(transform.position, -transform.up);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, springLength + wheelRadius))
+        upForce = 0f;
+        if (hasRaycastHit)
         {
-            grounded = true;
-
             float targetLength = hit.distance - wheelRadius;
             targetLength = Mathf.Clamp(targetLength, minSpringLength, springLength);
 
@@ -101,25 +163,26 @@ public class MyWheelCollider : MonoBehaviour
 
             float suspensionForce = springForce + damperForce;
 
-            if (suspensionForce > 0)
+            if (suspensionForce > 0) // Prevent negative force (car stuck to the ground)
             {
+                upForce += suspensionForce;
                 carRigidbody.AddForceAtPosition(suspensionForce * transform.up, hit.point);
             }
 
-            // VISUAL WHEEL: follow ground
-
-            if (hit.distance<wheelTransform.localPosition.y-wheelVisualStartLocalPos.y + (springLength / 2 + wheelRadius))
-            wheelTransform.localPosition = wheelVisualStartLocalPos + (springLength/2 + wheelRadius - hit.distance) * Vector3.up;
+            // visual wheel set to ground position
+            if (grounded)
+            {
+                grounded = true;
+                wheelTransform.localPosition = wheelVisualStartLocalPos + (wheelRadius - hit.distance) * Vector3.up;
+            }
 
             currentLength = targetLength;
         }
         else
         {
-            grounded = false;
-
             // no suspension force in air
 
-            // VISUAL WHEEL: drop to rest position
+            // visual wheel drop to rest position
             Vector3 restPos = transform.position - transform.up * restLength;
             wheelTransform.position = restPos;
         }
@@ -127,22 +190,26 @@ public class MyWheelCollider : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        // Draw suspention length and wheel rest position
+        // to help place the collider and visual wheel correctly
         Handles.DrawWireDisc(transform.position - springLength * restRatio * transform.up,
                              transform.right, wheelRadius);
 
         Handles.DrawLine(transform.position, transform.position - springLength * transform.up);
+        
         if (!debugWheel)
             return;
 
         Color color = Handles.color;
         Handles.color = Color.green;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.Euler(-90, 0, 0), springVelocity + 1f, EventType.Repaint);
+
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.up, transform.up), upForce/1000, EventType.Repaint);
 
         Handles.color = Color.red;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.Euler(0, 90, 0), 1, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.right, transform.up), rightForce/1000, EventType.Repaint);
 
         Handles.color = Color.blue;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.Euler(0, 0, 90), 1, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce/1000, EventType.Repaint);
         Handles.color = color;
     }
 }
