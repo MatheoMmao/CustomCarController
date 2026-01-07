@@ -118,11 +118,55 @@ MonoBehaviour:
   minSpringLength: 0.05
   springLength: 1
   restRatio: 0.5
-  springStrength: 35000
+  springStrength: 30000
   damperStrength: 4500
   wheelMass: 30
   wheelRadius: 0.25
   wheelTransform: {fileID: 4550114758782044080}
+  maxAngleSteer: 30
+  tireGripFactor: 1
+  tireGripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.6
+      inSlope: 0
+      outSlope: -0.3
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.5
+      inSlope: -0.3
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   carRigidbody: {fileID: 4113866133503241592}
   debugWheel: 0
 --- !u!1 &1487544658172436757
@@ -260,11 +304,55 @@ MonoBehaviour:
   minSpringLength: 0.05
   springLength: 1
   restRatio: 0.5
-  springStrength: 35000
+  springStrength: 30000
   damperStrength: 4500
   wheelMass: 30
   wheelRadius: 0.25
   wheelTransform: {fileID: 897780721463690011}
+  maxAngleSteer: 30
+  tireGripFactor: 1
+  tireGripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.6
+      inSlope: 0
+      outSlope: -0.3
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.5
+      inSlope: -0.3
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   carRigidbody: {fileID: 4113866133503241592}
   debugWheel: 0
 --- !u!1 &3161806153708313708
@@ -316,11 +404,55 @@ MonoBehaviour:
   minSpringLength: 0.05
   springLength: 1
   restRatio: 0.5
-  springStrength: 35000
+  springStrength: 30000
   damperStrength: 4500
   wheelMass: 30
   wheelRadius: 0.25
   wheelTransform: {fileID: 5949214799955141144}
+  maxAngleSteer: 30
+  tireGripFactor: 1
+  tireGripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.6
+      inSlope: 0
+      outSlope: -0.3
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.5
+      inSlope: -0.3
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   carRigidbody: {fileID: 4113866133503241592}
   debugWheel: 0
 --- !u!1 &4480964190697001415
@@ -550,11 +682,55 @@ MonoBehaviour:
   minSpringLength: 0.05
   springLength: 1
   restRatio: 0.5
-  springStrength: 35000
+  springStrength: 30000
   damperStrength: 4500
   wheelMass: 30
   wheelRadius: 0.25
   wheelTransform: {fileID: 3661693080574927154}
+  maxAngleSteer: 30
+  tireGripFactor: 1
+  tireGripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.6
+      inSlope: 0
+      outSlope: -0.3
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.5
+      inSlope: -0.3
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   carRigidbody: {fileID: 4113866133503241592}
   debugWheel: 0
 --- !u!1 &7631296550802484987

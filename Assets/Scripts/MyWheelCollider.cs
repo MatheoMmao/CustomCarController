@@ -20,6 +20,9 @@ public class MyWheelCollider : MonoBehaviour
     [SerializeField] private Transform wheelTransform; // Visual wheel
     [SerializeField] private float maxAngleSteer = 30f;
     private float angleSteer = 0f;
+    [SerializeField] float tireGripFactor = 1;
+    [SerializeField] AnimationCurve tireGripCurve = new AnimationCurve(new Keyframe(0, 0.6f, 0, -0.3f), new Keyframe(0.3f, 0.5f, -0.3f,0),
+        new Keyframe(0.5f,0.1f,0,0), new Keyframe(1,0.05f,0,0));
 
     [Header("Vehicle")]
     [SerializeField] private Rigidbody carRigidbody;
@@ -27,6 +30,7 @@ public class MyWheelCollider : MonoBehaviour
     private float restLength;
     private float currentLength;
     private float springVelocity;
+    Transform tireTransform;
 
     // Store visual wheel’s rest local position
     private Vector3 wheelVisualStartLocalPos;
@@ -39,6 +43,8 @@ public class MyWheelCollider : MonoBehaviour
     RaycastHit hit;
     bool hasRaycastHit;
 
+    Vector3 lastFramePos = Vector3.zero;
+
 
     // Debug
     float upForce;
@@ -50,6 +56,14 @@ public class MyWheelCollider : MonoBehaviour
         restLength = springLength * restRatio;
         currentLength = restLength;
         springVelocity = 0f;
+
+        GameObject tireGo = new GameObject();
+        tireTransform = tireGo.transform;
+        tireTransform.position = wheelTransform.position;
+        tireTransform.rotation = transform.rotation;
+        tireTransform.SetParent(transform.parent);
+
+        lastFramePos = tireTransform.position;
 
         if (wheelTransform != null)
         {
@@ -127,24 +141,29 @@ public class MyWheelCollider : MonoBehaviour
             // Temporary steer and resistance force
             if (steerable)
             {
-                Vector3 steeringDir = Vector3.right;
+                float steerAngle = Input.GetAxis("Horizontal") * 20;
 
-                float dir = Input.GetAxis("Horizontal");
-
-                rightForce += dir * 1000;
-
-                carRigidbody.AddForceAtPosition(dir * transform.right * 3000, transform.position);
+                tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
             }
 
-            Vector3 velocity = carRigidbody.GetPointVelocity(transform.position);
+            Vector3 steeringDir = tireTransform.right;
 
-            float steeringVelocity = Vector3.Dot(transform.right, velocity);
+            Vector3 tireVel = (tireTransform.position - lastFramePos) / Time.fixedDeltaTime;
 
-            float acceleration = -(steeringVelocity * 0.5f) / Time.fixedDeltaTime;
+            float rightVelocity = Vector3.Dot(steeringDir, tireVel);
 
-            rightForce += acceleration * wheelMass;
-            carRigidbody.AddForceAtPosition(transform.right * acceleration * wheelMass, transform.position);
+            
+
+            float rightAcceleration = -rightVelocity* /*tireGripCurve.Evaluate(Mathf.Abs(rightVelocity) / tireVel.magnitude)*/0.2f / Time.fixedDeltaTime;
+
+            carRigidbody.AddForceAtPosition(rightAcceleration * wheelMass * steeringDir, tireTransform.position);
+            rightForce = rightAcceleration * wheelMass;
         }
+
+        wheelTransform.rotation = tireTransform.rotation;
+        wheelTransform.Rotate(-90, 90, 0);
+
+        lastFramePos = tireTransform.position;
     }
 
 
@@ -196,20 +215,20 @@ public class MyWheelCollider : MonoBehaviour
                              transform.right, wheelRadius);
 
         Handles.DrawLine(transform.position, transform.position - springLength * transform.up);
-        
+
         if (!debugWheel)
             return;
 
         Color color = Handles.color;
         Handles.color = Color.green;
 
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.up, transform.up), upForce/1000, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.up, transform.up), upForce / 1000, EventType.Repaint);
 
         Handles.color = Color.red;
         Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.right, transform.up), rightForce/1000, EventType.Repaint);
 
         Handles.color = Color.blue;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce/1000, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce / 1000, EventType.Repaint);
         Handles.color = color;
     }
 }
