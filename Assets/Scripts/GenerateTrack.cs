@@ -33,6 +33,6 @@ public class GenerateTrack : MonoBehaviour
             }
         }
 
-        Instantiate(prefab, transform.position + direction, Quaternion.identity);
+        Instantiate(prefab, transform.position + direction, Quaternion.identity).name="Ground";
     }
 }

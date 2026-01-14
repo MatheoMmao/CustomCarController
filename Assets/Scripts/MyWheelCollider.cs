@@ -5,8 +5,10 @@ using UnityEngine.InputSystem.HID;
 
 public class MyWheelCollider : MonoBehaviour
 {
+    [Header("State")]
     [SerializeField] bool steerable = false;
     [SerializeField] bool motorized = false;
+    [SerializeField] bool breakable = true;
 
     [Header("Suspension")]
     [SerializeField] private float minSpringLength = 0.05f; // Recomended to not put 0 as the min distance
@@ -14,31 +16,32 @@ public class MyWheelCollider : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float restRatio = 0.5f;
     [SerializeField] private float springStrength = 30000f;
     [SerializeField] private float damperStrength = 4500f;
-    [SerializeField] private float wheelMass = 30f;
 
     [Header("Wheel")]
+    [SerializeField] private float wheelMass = 30f;
     [SerializeField] private float wheelRadius = 0.25f;
     [SerializeField] private Transform wheelTransform; // Visual wheel
     [SerializeField] private float maxAngleSteer = 30f;
-    private float angleSteer = 0f;
     [SerializeField] float tireGripFactor = 1;
-    [SerializeField] AnimationCurve tireGripCurve = new AnimationCurve(new Keyframe(0, 0.6f, 0, -0.3f), new Keyframe(0.3f, 0.5f, -0.3f,0),
-        new Keyframe(0.5f,0.1f,0,0), new Keyframe(1,0.05f,0,0));
+    [SerializeField]
+    AnimationCurve tireGripCurve = new AnimationCurve(new Keyframe(0, 0.6f, 0, -0.3f), new Keyframe(0.3f, 0.5f, -0.3f, 0),
+        new Keyframe(0.5f, 0.1f, 0, 0), new Keyframe(1, 0.05f, 0, 0));
     [SerializeField] float wheelTorque = 0f;
-    float wheelRPM = 0;
+    public bool debugWheel = false;
+    [SerializeField] float maxBreakTorque = 100f;
 
     [Header("Vehicle")]
     [SerializeField] private Rigidbody carRigidbody;
 
+    Transform tireTransform;
+    private Vector3 wheelVisualStartLocalPos;
     private float restLength;
     private float currentLength;
-    private float springVelocity;
-    Transform tireTransform;
 
-    // Store visual wheel’s rest local position
-    private Vector3 wheelVisualStartLocalPos;
+    float wheelRPM = 0;
+    float breakValue = 0f;
+    private float angleSteer = 0f;
 
-    public bool debugWheel = false;
     bool grounded = false;
 
     Material visualWheelMaterial;
@@ -59,7 +62,6 @@ public class MyWheelCollider : MonoBehaviour
     {
         restLength = springLength * restRatio;
         currentLength = restLength;
-        springVelocity = 0f;
 
         GameObject tireGo = new GameObject();
         tireTransform = tireGo.transform;
@@ -100,7 +102,7 @@ public class MyWheelCollider : MonoBehaviour
             visualWheelMaterial.color = Color.red;
         }
 
-        if (Physics.Raycast(ray, out hit, springLength + wheelRadius,Physics.DefaultRaycastLayers,QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hit, springLength + wheelRadius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             hasRaycastHit = true;
             if (hit.distance < wheelTransform.localPosition.y - wheelVisualStartLocalPos.y + springLength + wheelRadius)
@@ -122,20 +124,37 @@ public class MyWheelCollider : MonoBehaviour
             // Temporary acceleration and resistance force
             if (motorized)
             {
-                float move = Input.GetAxis("Vertical");
-
-                forwardForce += wheelTorque/wheelRadius;
-
-                carRigidbody.AddForceAtPosition(tireTransform.forward * (wheelTorque / wheelRadius), tireTransform.position);
+                forwardForce += wheelTorque / wheelRadius;
             }
 
-            Vector3 velocity = carRigidbody.GetPointVelocity(transform.position);
+            if (breakable)
+            {
+                float longitudinalSpeed = Vector3.Dot(tireVel, tireTransform.forward);
 
-            float carSpeed = Vector3.Dot(transform.forward, velocity);
+                float breakForce = (breakValue * maxBreakTorque) / wheelRadius;
 
-            forwardForce += (-carSpeed / 0.5f) / Time.fixedDeltaTime;
+                float maxForce = upForce; // TODO : Add friction coef when implemented
 
-            carRigidbody.AddForceAtPosition((-carSpeed * 0.5f) / Time.fixedDeltaTime * transform.forward, transform.position);
+                float appliedBreakForce = Mathf.Min(breakForce, maxForce);
+
+                if (Mathf.Abs(longitudinalSpeed) > 0.1f)
+                {
+                    appliedBreakForce *= Mathf.Sign(longitudinalSpeed);
+                }
+                else
+                {
+                    appliedBreakForce = 0f;
+
+                    if (carRigidbody.linearVelocity.magnitude < 0.01f)
+                    {
+                        carRigidbody.linearVelocity = Vector3.zero;
+                    }
+                }
+
+                forwardForce -= appliedBreakForce;
+            }
+
+            carRigidbody.AddForceAtPosition(tireTransform.forward * forwardForce, tireTransform.position);
         }
     }
 
@@ -156,9 +175,9 @@ public class MyWheelCollider : MonoBehaviour
 
             float rightVelocity = Vector3.Dot(steeringDir, tireVel);
 
-            
 
-            float rightAcceleration = -rightVelocity* /*tireGripCurve.Evaluate(Mathf.Abs(rightVelocity) / tireVel.magnitude)*/tireGripFactor / Time.fixedDeltaTime;
+
+            float rightAcceleration = -rightVelocity * /*tireGripCurve.Evaluate(Mathf.Abs(rightVelocity) / tireVel.magnitude)*/tireGripFactor / Time.fixedDeltaTime;
 
             carRigidbody.AddForceAtPosition(rightAcceleration * wheelMass * steeringDir, tireTransform.position);
             rightForce = rightAcceleration * wheelMass;
@@ -179,7 +198,9 @@ public class MyWheelCollider : MonoBehaviour
             float springCompression = restLength - targetLength;
 
             float springForce = springStrength * springCompression;
-            float damperForce = damperStrength * (currentLength - targetLength) / Time.fixedDeltaTime;
+
+            float suspensionVelocity = (currentLength - targetLength) / Time.fixedDeltaTime;
+            float damperForce = damperStrength * suspensionVelocity;
 
             float suspensionForce = springForce + damperForce;
 
@@ -192,7 +213,6 @@ public class MyWheelCollider : MonoBehaviour
             // visual wheel set to ground position
             if (grounded)
             {
-                grounded = true;
                 wheelTransform.localPosition = wheelVisualStartLocalPos + (wheelRadius - hit.distance) * Vector3.up;
             }
 
@@ -226,7 +246,7 @@ public class MyWheelCollider : MonoBehaviour
         Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.up, transform.up), upForce / 1000, EventType.Repaint);
 
         Handles.color = Color.red;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.right, transform.up), rightForce/1000, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.right, transform.up), rightForce / 1000, EventType.Repaint);
 
         Handles.color = Color.blue;
         Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce / 1000, EventType.Repaint);
@@ -249,7 +269,7 @@ public class MyWheelCollider : MonoBehaviour
 
         float wheelOmega = longitudinalSpeed / wheelRadius;
 
-         wheelRPM = wheelOmega * 60f / (2f * Mathf.PI);
+        wheelRPM = wheelOmega * 60f / (2f * Mathf.PI);
     }
 
     void CalculateTireVelocity()
@@ -268,5 +288,10 @@ public class MyWheelCollider : MonoBehaviour
     public float GetRPM()
     {
         return wheelRPM;
+    }
+
+    public void SetBreakValue(float breakValue)
+    {
+        this.breakValue = breakValue;
     }
 }

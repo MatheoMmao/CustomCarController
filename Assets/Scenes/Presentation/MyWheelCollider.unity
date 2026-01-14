@@ -372,6 +372,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: breakable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: motorized
       value: 1
       objectReference: {fileID: 0}
@@ -386,6 +390,10 @@ PrefabInstance:
     - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: wheelTorque
       value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: maxBreakTorque
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: tireGripFactor
@@ -449,7 +457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.88
+      value: 3.82
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -500,6 +508,10 @@ PrefabInstance:
       value: 0.68
       objectReference: {fileID: 0}
     - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: breakable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: motorized
       value: 0
       objectReference: {fileID: 0}
@@ -512,8 +524,12 @@ PrefabInstance:
       value: 0.34
       objectReference: {fileID: 0}
     - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: maxBreakTorque
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: tireGripFactor
-      value: 0.2
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: wheelTransform
@@ -564,6 +580,10 @@ PrefabInstance:
       value: 0.119299605
       objectReference: {fileID: 0}
     - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: breakable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: motorized
       value: 1
       objectReference: {fileID: 0}
@@ -578,6 +598,10 @@ PrefabInstance:
     - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: wheelTorque
       value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: maxBreakTorque
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: tireGripFactor
@@ -640,6 +664,10 @@ PrefabInstance:
       value: 0.68
       objectReference: {fileID: 0}
     - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: breakable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: motorized
       value: 0
       objectReference: {fileID: 0}
@@ -652,8 +680,12 @@ PrefabInstance:
       value: 0.34
       objectReference: {fileID: 0}
     - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+      propertyPath: maxBreakTorque
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: tireGripFactor
-      value: 0.2
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
       propertyPath: wheelTransform
@@ -743,11 +775,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   airDensity: 1.29
+  dragCoef: 1
+  frontalArea: 2.2
+  dragForce: {x: 0, y: 0, z: 0}
   throttleValue: 0
+  speedChangeThrottleValue: 1
+  breakValue: 0
+  speedChangeBreakValue: 2
   minEngineTorque: 400
   maxEngineTorque: 500
   minEngineRPM: 1000
   maxEngineRPM: 6000
+  RPM: 0
+  engineTorque: 0
   RPMToTorqueCurve:
     serializedVersion: 2
     m_Curve:
@@ -781,52 +821,22 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  RPM: 0
-  engineForce: 0
-  frictionCoef: 0.3
-  frontalArea: 2.2
-  rollResistance: 12.8
-  mass: 100
   gearRatio: 2.66
   differentialRatio: 3.42
   transmissionEfficiency: 0.7
-  centerOfGravity: {x: 0, y: 0, z: 0}
   wheelColliders:
   - {fileID: 834977110}
   - {fileID: 39047283}
   - {fileID: 77332187}
   - {fileID: 1996010656}
-  wheelControls: []
-  wheelFrictionCoef: 1.5
-  tractionForce: {x: 0, y: 0}
-  dragForce: {x: 0, y: 0}
-  rollResistanceForce: {x: 0, y: 0}
-  longitudinalForce: {x: 0, y: 0}
-  velocity: {x: 0, y: 0}
-  acceleration: {x: 0, y: 0}
-  engineTorque: 0
   wheelTorque: 0
-  wheelMaxFriction: []
-  wheelWeightSupported: []
   wheelsRPM: 0
-  wheelsSpeed: 0
 --- !u!4 &1261110717 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 897780721463690011, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
   m_PrefabInstance: {fileID: 910426957}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1996010656 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
-  m_PrefabInstance: {fileID: 910426957}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c311805c6e4a2d34db67567542d8f88f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1001 &2307415927109394354
+--- !u!1001 &1344872150
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -883,6 +893,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5299d039c8c2864993ed4e72f2c9112, type: 3}
+--- !u!114 &1996010656 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+  m_PrefabInstance: {fileID: 910426957}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c311805c6e4a2d34db67567542d8f88f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -890,4 +911,4 @@ SceneRoots:
   - {fileID: 873429642}
   - {fileID: 910426957}
   - {fileID: 152160143}
-  - {fileID: 2307415927109394354}
+  - {fileID: 1344872150}
