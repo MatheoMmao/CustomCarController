@@ -52,13 +52,14 @@ public class MyWheelCollider : MonoBehaviour
     Vector3 lastFramePos = Vector3.zero;
     Vector3 tireVel;
 
+    float loadSupported = 0f;
 
     // Debug
     float upForce;
     float rightForce;
     float forwardForce;
 
-    private void Start()
+    private void Awake()
     {
         restLength = springLength * restRatio;
         currentLength = restLength;
@@ -161,15 +162,15 @@ public class MyWheelCollider : MonoBehaviour
     private void UpdateWheelSteerForce()
     {
         rightForce = 0f;
+        // Temporary steer and resistance force
+        if (steerable)
+        {
+            float steerAngle = Input.GetAxis("Horizontal") * 20;
+
+            tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
+        }
         if (grounded)
         {
-            // Temporary steer and resistance force
-            if (steerable)
-            {
-                float steerAngle = Input.GetAxis("Horizontal") * 20;
-
-                tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
-            }
 
             Vector3 steeringDir = tireTransform.right;
 
@@ -253,6 +254,15 @@ public class MyWheelCollider : MonoBehaviour
         Handles.color = color;
     }
 
+    void OnGUI()
+    {
+        Vector3 pos = Camera.main.WorldToScreenPoint(wheelTransform.position);
+
+        pos.y = Screen.height - pos.y;
+        GUI.color = Color.magenta;
+        GUI.Label(new Rect(pos.x, pos.y, 200, 40), $"{loadSupported}");
+    }
+
     public void SetWheelTorque(float torque)
     {
         wheelTorque = torque;
@@ -293,5 +303,26 @@ public class MyWheelCollider : MonoBehaviour
     public void SetBreakValue(float breakValue)
     {
         this.breakValue = breakValue;
+    }
+
+    public void SetLoadSupported(float load)
+    {
+        this.loadSupported = load;
+    }
+
+    public Vector3 GetWheelTransformPosition()
+    {
+        return tireTransform.position;
+    }
+
+    public bool GetLowestPoint(out Vector3 point)
+    {
+        point = Vector3.zero;
+        if (grounded)
+        {
+            point = tireTransform.position - tireTransform.up * wheelRadius;
+            return true;
+        }
+        return false;
     }
 }

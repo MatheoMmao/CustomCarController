@@ -1,15 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
 using Unity.Properties;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class CarPhysics : MonoBehaviour
 {
     [Header("Outside Input")]
-    [SerializeField][Tooltip("Air density in km/m^3")]float airDensity = 1.29f;
+    [SerializeField][Tooltip("Air density in km/m^3")] float airDensity = 1.29f;
     [SerializeField] float dragCoef = 0.3f;
-    [SerializeField] [Tooltip("Frontal area of the car in m^2")]float frontalArea = 2.2f;
+    [SerializeField][Tooltip("Frontal area of the car in m^2")] float frontalArea = 2.2f;
     [SerializeField] Vector3 dragForce;
 
     [Header("Inputs")]
@@ -40,12 +42,18 @@ public class CarPhysics : MonoBehaviour
     [SerializeField] float wheelTorque;
     [SerializeField] float wheelsRPM;
 
+    Vector3 wheelBase;
+
+    Vector3 lastFrameVelocity = Vector3.zero;
+    Vector3 lastFrameAcceleration = Vector3.zero;
 
     Rigidbody rb;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        CalculateWheelBase();
     }
 
     private void Update()
@@ -77,6 +85,8 @@ public class CarPhysics : MonoBehaviour
 
     private void FixedUpdate()
     {
+        CalculateLastFrameAcceleration();
+
         // Get the previous frame wheelsRPM
         wheelsRPM = CalculateWheelRPM();
 
@@ -92,6 +102,13 @@ public class CarPhysics : MonoBehaviour
         // Give the values to all the wheelColliders
         foreach (var collider in wheelColliders)
         {
+            Vector3 wheelPosLocal = transform.InverseTransformPoint(collider.GetWheelTransformPosition())- rb.centerOfMass;
+
+            Debug.Log($"Collider : {collider.name} : {wheelPosLocal}");
+
+            float loadSupported = CalculateWheelLoadSupported(wheelPosLocal);
+            collider.SetLoadSupported(loadSupported);
+
             wheelTorque = CalculateWheelTorque(engineTorque, gearRatio, differentialRatio, transmissionEfficiency,
                 collider.GetWheelRadius());
             collider.SetWheelTorque(wheelTorque);
@@ -99,6 +116,17 @@ public class CarPhysics : MonoBehaviour
         }
 
         Debug.Log(rb.linearVelocity.magnitude);
+    }
+
+    void CalculateLastFrameAcceleration()
+    {
+        Vector3 velocityChange = rb.linearVelocity - lastFrameVelocity;
+
+        Debug.Log($"Velocity change : {velocityChange}");
+
+        lastFrameAcceleration = velocityChange / Time.fixedDeltaTime;
+
+        lastFrameVelocity = rb.linearVelocity;
     }
 
     float CalculateEngineRPM(float wheelRPM, float gearRatio, float differentialRatio)
@@ -142,5 +170,101 @@ public class CarPhysics : MonoBehaviour
         Vector3 forwardVelocity = Vector3.Project(velocity, transform.forward);
 
         return -0.5f * dragCoef * frontalArea * airDensity * forwardVelocity.magnitude * forwardVelocity;
+    }
+
+    float CalculateWheelLoadSupported(Vector3 wheelPos)
+    {
+        float heightCG = GetCOMHeight();
+
+        float totalWeight = rb.mass * Physics.gravity.magnitude;
+
+        float axleLoad = totalWeight * (Mathf.Abs(wheelPos.z) / wheelBase.z);
+
+        float wheelLoad = axleLoad * (Mathf.Abs(wheelPos.x) / wheelBase.x);
+
+        Vector3 localAcceleration = transform.InverseTransformDirection(lastFrameAcceleration);
+
+        float dF_long = (rb.mass * localAcceleration.z * heightCG) / wheelBase.z;
+        float dF_lat = (rb.mass * localAcceleration.x * heightCG) / wheelBase.x;
+
+        wheelLoad += Mathf.Sign(-wheelPos.z) * dF_long * 0.5f;
+        Debug.Log($"{wheelPos} --- {heightCG} --- {totalWeight} --- {axleLoad} --- {wheelLoad} --- {dF_long} --- {dF_lat} --- {wheelLoad} --- {lastFrameAcceleration}");
+
+        wheelLoad += Mathf.Sign(wheelPos.x) * dF_lat * 0.5f;
+
+        Debug.Log($"{wheelLoad}");
+
+        return wheelLoad;
+    }
+
+    void CalculateWheelBase()
+    {
+        Vector3 frontMaxWheelPos = Vector3.zero;
+        Vector3 rearMaxWheelPos = Vector3.zero;
+        Vector3 leftMaxWheelPos = Vector3.zero;
+        Vector3 rightMaxWheelPos = Vector3.zero;
+
+        bool first = true;
+
+        foreach (var control in wheelColliders)
+        {
+            Vector3 pos = transform.InverseTransformPoint(control.GetWheelTransformPosition()) - rb.centerOfMass;
+
+            if (first)
+            {
+                frontMaxWheelPos = pos;
+                rearMaxWheelPos = pos;
+                leftMaxWheelPos = pos;
+                rightMaxWheelPos = pos;
+
+                first = false;
+            }
+
+            if (pos.z > frontMaxWheelPos.z)
+            {
+                frontMaxWheelPos = pos;
+            }
+
+            if (pos.z < rearMaxWheelPos.z)
+            {
+                rearMaxWheelPos = pos;
+            }
+
+            if (pos.x > rightMaxWheelPos.x)
+            {
+                rightMaxWheelPos = pos;
+            }
+
+            if (pos.x < leftMaxWheelPos.x)
+            {
+                leftMaxWheelPos = pos;
+            }
+        }
+
+        wheelBase = new Vector3(rightMaxWheelPos.x - leftMaxWheelPos.x, 0, frontMaxWheelPos.z - rearMaxWheelPos.z);
+    }
+
+    float GetCOMHeight()
+    {
+        // Convert COM to car local space
+        Vector3 comLocal = transform.InverseTransformPoint(rb.worldCenterOfMass);
+
+        // Find lowest wheel contact in car local space
+        float lowestYLocal = float.MaxValue;
+
+        foreach (var wc in wheelColliders)
+        {
+            if (wc.GetLowestPoint(out Vector3 lowestPoint))
+            {
+                // Convert wheel contact point to car local space
+                Vector3 contactLocal = transform.InverseTransformPoint(lowestPoint);
+                lowestYLocal = Mathf.Min(lowestYLocal, contactLocal.y);
+            }
+        }
+
+        // COM height relative to lowest wheel contact
+        float h = comLocal.y - lowestYLocal;
+
+        return h;
     }
 }
