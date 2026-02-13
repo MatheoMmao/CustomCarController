@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 public class MyWheelCollider : MonoBehaviour
@@ -140,6 +142,7 @@ public class MyWheelCollider : MonoBehaviour
         CalculateRPM();
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         // Draw suspention length and wheel rest position
@@ -188,6 +191,10 @@ public class MyWheelCollider : MonoBehaviour
 
     void OnGUI()
     {
+        if (!debugWheel)
+        {
+            return;
+        }
         // Draw the load supported on the wheel position
         Vector3 pos = Camera.main.WorldToScreenPoint(wheelTransform.position);
 
@@ -195,6 +202,7 @@ public class MyWheelCollider : MonoBehaviour
         GUI.color = Color.magenta;
         GUI.Label(new Rect(pos.x, pos.y, 200, 40), $"{loadSupported}");
     }
+#endif
 
     void CheckGroundedState()
     {

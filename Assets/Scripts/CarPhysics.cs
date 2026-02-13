@@ -1,11 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using Unity.Properties;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CarPhysics : MonoBehaviour
@@ -156,6 +152,7 @@ public class CarPhysics : MonoBehaviour
         Debug.Log(rb.linearVelocity.magnitude * 3.6f);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (!debug)
@@ -176,6 +173,7 @@ public class CarPhysics : MonoBehaviour
         }
         Handles.color = color;
     }
+#endif
 
     void CalculateLastFrameAcceleration()
     {

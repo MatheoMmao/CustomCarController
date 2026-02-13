@@ -6,6 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Racing Starter Kit/RSK Assets/Scenes/SampleScene.unity
-    guid: adc28652a668a9646b0352d63f41b808
+    path: Assets/Scenes/TrackAsset.unity
+    guid: 117cfaa550232b54190805904a4eb394
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
