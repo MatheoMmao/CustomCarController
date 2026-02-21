@@ -279,7 +279,7 @@ public class MyWheelCollider : MonoBehaviour
         // Temporary steer and resistance force
         if (steerable)
         {
-            float steerAngle = Input.GetAxis("Horizontal") * 20;
+            float steerAngle = Input.GetAxis("Horizontal") * maxAngleSteer;
 
             tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
         }
@@ -311,7 +311,7 @@ public class MyWheelCollider : MonoBehaviour
 
         if (steerable)
         {
-            float steerAngle = Input.GetAxis("Horizontal") * 30;
+            float steerAngle = Input.GetAxis("Horizontal") * maxAngleSteer;
 
             tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
         }

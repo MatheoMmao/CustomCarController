@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
 
     // TODO : Replace this controller with a cinemachine camera for better control
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         float angleX = carTransform.eulerAngles.x;
@@ -28,9 +29,8 @@ public class CameraController : MonoBehaviour
         Vector3 directionRay = (targetPosition - carTransform.position).normalized;
 
         Handles.DrawLine(carTransform.position + directionRay * 3f, carTransform.position + directionRay * offset.magnitude);
-
-        Gizmos.DrawWireSphere(carTransform.position + directionRay * 3f, 0.1f);
     }
+#endif
 
     private void Update()
     {
@@ -99,11 +99,6 @@ public class CameraController : MonoBehaviour
         if (Physics.Raycast(carTransform.position + directionRay * 3f, directionRay, out RaycastHit item, offset.magnitude - 3, 1))
         {
             gapPosition = (carTransform.position + ((item.distance * 0.8f) + 3) * directionRay) - transform.position;
-        }
-        Collider[] collider = Physics.OverlapSphere(carTransform.position + directionRay * 3f, 0.1f);
-        if (collider.Length > 0)
-        {
-            gapPosition = (carTransform.position + 3 * directionRay) - transform.position;
         }
 
         transform.position += gapPosition * Time.fixedDeltaTime * 10;

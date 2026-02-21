@@ -1303,16 +1303,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Car w myController
       objectReference: {fileID: 0}
-    - target: {fileID: 2014473331833211189, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: gearRatio
-      value: 2.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: tireGripFactor
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1321,12 +1311,12 @@ PrefabInstance:
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.29000002
+      value: 0.903
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 214.18
+      value: 197.47
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
@@ -1363,34 +1353,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: tireGripFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: tireGripFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5743981498952017909, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: m_ClearFlags
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: tireGripFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8956940483658756894, guid: a9b478ab47869f746a161ea950ac9b7a,
-        type: 3}
-      propertyPath: m_TagString
-      value: Car
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5121185392190332411, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
@@ -45959,7 +45923,7 @@ Transform:
   m_GameObject: {fileID: 1889299223}
   serializedVersion: 2
   m_LocalRotation: {x: 0.1305262, y: 0, z: 0, w: 0.9914449}
-  m_LocalPosition: {x: 150.77, y: 4.29, z: 208.18}
+  m_LocalPosition: {x: 150.77, y: 4.903, z: 191.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
