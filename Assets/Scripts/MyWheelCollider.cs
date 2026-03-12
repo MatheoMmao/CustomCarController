@@ -140,6 +140,15 @@ public class MyWheelCollider : MonoBehaviour
         UpdateWheelSteerForce();
         UpdateAccelerationForce();
         CalculateRPM();
+
+        float rotationY = (wheelRPM / 60f) * 360f * Time.fixedDeltaTime;
+
+        wheelVisualStartRotation.x -= rotationY;
+        while(wheelVisualStartRotation.x<0f)
+        {
+            wheelVisualStartRotation.x += 360f;
+        }
+        wheelVisualStartRotation.x %= 360f;
     }
 
 #if UNITY_EDITOR
@@ -147,53 +156,53 @@ public class MyWheelCollider : MonoBehaviour
     {
         // Draw suspention length and wheel rest position
         // to help place the collider and visual wheel correctly
-        Handles.DrawWireDisc(transform.position - springLength * restRatio * transform.up,
-                             transform.right, wheelRadius);
+        //Handles.DrawWireDisc(transform.position - springLength * restRatio * transform.up,
+        //                     transform.right, wheelRadius);
 
-        Handles.DrawLine(transform.position, transform.position - springLength * transform.up);
+        //Handles.DrawLine(transform.position, transform.position - springLength * transform.up);
 
         if (!debugWheel)
             return;
 
-        // Force arrow of the wheel movement
+        //Force arrow of the wheel movement
         Color color = Handles.color;
         Handles.color = Color.green;
 
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.up, transform.up), upForce / 1000, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.up, transform.up), upForce / 8000, EventType.Repaint);
 
         Handles.color = Color.red;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.right, transform.up), rightForce / 1000, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.right, transform.up), rightForce / 8000, EventType.Repaint);
 
         Handles.color = Color.blue;
-        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce / 1000, EventType.Repaint);
+        Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce / 8000, EventType.Repaint);
         Handles.color = color;
 
-        // Draw lateral force curve
+        //Draw lateral force curve
         Vector3 lastPoint = transform.position;
         float normalForce = 4000f;
 
         Gizmos.color = Color.green;
         bool first = true;
 
-        for (float angle = -20f; angle <= 20f; angle += 0.5f)
-        {
-            float force = CalculatePacejkaForce(angle, normalForce, lateralCoefficients);
-            Vector3 point = transform.position + new Vector3(angle * 0.1f, force * 0.001f, 0);
+        //for (float angle = -20f; angle <= 20f; angle += 0.5f)
+        //{
+        //    float force = CalculatePacejkaForce(angle, normalForce, lateralCoefficients);
+        //    Vector3 point = transform.position + new Vector3(angle * 0.1f, force * 0.001f, 0);
 
-            if (!first)
-            {
-                Gizmos.DrawLine(lastPoint, point);
-            }
-            first = false;
-            lastPoint = point;
-        }
+        //    if (!first)
+        //    {
+        //        Gizmos.DrawLine(lastPoint, point);
+        //    }
+        //    first = false;
+        //    lastPoint = point;
+        //}
     }
 
     void OnGUI()
     {
+            return;
         if (!debugWheel)
         {
-            return;
         }
         // Draw the load supported on the wheel position
         Vector3 pos = Camera.main.WorldToScreenPoint(wheelTransform.position);

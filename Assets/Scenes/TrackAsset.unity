@@ -1303,20 +1303,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Car w myController
       objectReference: {fileID: 0}
+    - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: debugWheel
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 150.77
+      value: 150.56
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.903
+      value: 0.38
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 197.47
+      value: 214.33
       objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
@@ -1352,6 +1357,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606792028618815900, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: debugWheel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745128012297932093, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: debugWheel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: debugWheel
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -45809,7 +45829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carTransform: {fileID: 737677558}
-  offset: {x: 0, y: 4, z: -6}
+  offset: {x: 0, y: 3, z: -6}
   angleBase: {x: 15, y: 0, z: 0}
 --- !u!114 &1889299225
 MonoBehaviour:
@@ -45923,12 +45943,12 @@ Transform:
   m_GameObject: {fileID: 1889299223}
   serializedVersion: 2
   m_LocalRotation: {x: 0.1305262, y: 0, z: 0, w: 0.9914449}
-  m_LocalPosition: {x: 150.77, y: 4.903, z: 191.47}
+  m_LocalPosition: {x: 150.56, y: 3.38, z: 208.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -3.841, y: -104.511, z: -14.511}
 --- !u!1001 &1890624764
 PrefabInstance:
   m_ObjectHideFlags: 0
