@@ -225,7 +225,7 @@ public class MyWheelCollider : MonoBehaviour
         {
             hasRaycastHit = true;
 
-            if (hit.distance < Mathf.Abs(tireTransform.position.y) + springLength + wheelRadius)
+            if (hit.distance < Mathf.Abs(tireTransform.position.y) /*+ springLength*/ + wheelRadius)
             {
                 grounded = true;
             }
@@ -399,7 +399,7 @@ public class MyWheelCollider : MonoBehaviour
             }
 
             // visual wheel set to ground position
-            if (grounded)
+            if (grounded && suspensionForce > 0)
             {
                 wheelTransform.localPosition = wheelVisualStartLocalPos + (wheelRadius - hit.distance) * Vector3.up;
             }
