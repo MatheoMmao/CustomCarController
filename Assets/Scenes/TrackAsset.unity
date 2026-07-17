@@ -1303,6 +1303,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Car w myController
       objectReference: {fileID: 0}
+    - target: {fileID: 2014473331833211189, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: visualSteeringWheel
+      value: 
+      objectReference: {fileID: 43552649}
     - target: {fileID: 2080592336304308264, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: debugWheel
@@ -1368,6 +1373,11 @@ PrefabInstance:
       propertyPath: debugWheel
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5429251418515617619, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: m_Name
+      value: WheelAnchor
+      objectReference: {fileID: 0}
     - target: {fileID: 6069832084400298718, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: debugWheel
@@ -1386,6 +1396,12 @@ PrefabInstance:
       addedObject: {fileID: 1032865015}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9b478ab47869f746a161ea950ac9b7a, type: 3}
+--- !u!1 &43552649 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5429251418515617619, guid: a9b478ab47869f746a161ea950ac9b7a,
+    type: 3}
+  m_PrefabInstance: {fileID: 43552648}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &46536136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2722,6 +2738,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 393207239731357619, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
         type: 3}
       propertyPath: m_Name
@@ -2777,6 +2798,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1763277165867629938, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2633365042866799530, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2766569358201078490, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
         type: 3}
       propertyPath: m_IsActive
@@ -2792,9 +2823,24 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5895826684305351068, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6232745470614056090, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
         type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8748500131873809389, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9173983156334026967, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6543,6 +6589,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 2a4501348485bd347add4da3184d9379,
     type: 3}
   m_PrefabInstance: {fileID: 86969404}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &266404929 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1670256624, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 90590756}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &268146222
 PrefabInstance:
@@ -22107,7 +22159,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -30697,6 +30749,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 949667273}
   m_SourcePrefab: {fileID: 100100000, guid: 841c5d3ec4b663647a7b2997a90e3f97, type: 3}
+--- !u!1 &1208971047 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 202364687, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 90590756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1210245297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33281,6 +33339,7 @@ MonoBehaviour:
     type: 3}
   steerAction: {fileID: 3024826903436833237, guid: 289c1b55c9541489481df5cc06664110,
     type: 3}
+  overrideSteering: 0
 --- !u!4 &1321362354
 Transform:
   m_ObjectHideFlags: 0
@@ -44968,6 +45027,52 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: f1aad50c3da20e5409c429cd6e377c83, type: 3}
+--- !u!1 &1832955969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1832955971}
+  - component: {fileID: 1832955970}
+  m_Layer: 0
+  m_Name: VrControllerWheel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1832955970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832955969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1dce404c67cece4a8a487867517b720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftController: {fileID: 1208971047}
+  rightController: {fileID: 266404929}
+--- !u!4 &1832955971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832955969}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 162.85721, y: -9.578769, z: 212.52408}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1834007619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46123,7 +46228,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -52432,3 +52537,4 @@ SceneRoots:
   - {fileID: 885265007}
   - {fileID: 1889299228}
   - {fileID: 1321362354}
+  - {fileID: 1832955971}

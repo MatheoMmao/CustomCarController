@@ -9,6 +9,8 @@ public class RegisterInputs : MonoBehaviour
     [SerializeField] InputActionReference brakingAction;
     [SerializeField] InputActionReference steerAction;
 
+    public bool overrideSteering = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -49,18 +51,29 @@ public class RegisterInputs : MonoBehaviour
         steerAction.action.Enable();
         steerAction.action.performed += (_) =>
         {
-            float steer = _.ReadValue<Vector2>().x;
-            if (controlledCar != null)
+            if (!overrideSteering)
             {
-                controlledCar.SetSteerInput(steer);
+                float steer = _.ReadValue<Vector2>().x;
+                if (controlledCar != null)
+                {
+                    SetSteeringValue(steer);
+                }
             }
         };
         steerAction.action.canceled += (_) =>
         {
-            if (controlledCar != null)
+            if (!overrideSteering)
             {
-                controlledCar.SetSteerInput(0);
+                if (controlledCar != null)
+                {
+                    SetSteeringValue(0);
+                }
             }
         };
+    }
+
+    public void SetSteeringValue(float value)
+    {
+        controlledCar.SetSteerInput(value);
     }
 }

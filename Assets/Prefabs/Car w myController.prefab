@@ -88,7 +88,7 @@ MonoBehaviour:
   dragForce: {x: 0, y: 0, z: 0}
   throttleValue: 0
   speedChangeThrottleValue: 1
-  breakValue: 0
+  brakingValue: 0
   speedChangeBreakValue: 2
   minEngineTorque: 400
   maxEngineTorque: 500
@@ -139,6 +139,8 @@ MonoBehaviour:
   - {fileID: 2080592336304308264}
   wheelTorque: 0
   wheelsRPM: 0
+  visualSteeringWheel: {fileID: 0}
+  AngleSteeringWheel: 90
   debug: 0
 --- !u!1 &1435434479072968312
 GameObject:
@@ -864,6 +866,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1849527200321824860}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2630210911226659865
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3819529153651754275}
+    m_Modifications:
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991341891524097698, guid: 17d30788af864144f8e6d1d11cdb71b4,
+        type: 3}
+      propertyPath: m_Name
+      value: Syl_CorvetteZ06_Body
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 17d30788af864144f8e6d1d11cdb71b4, type: 3}
+--- !u!4 &3776576879407933441 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1218639635850570776, guid: 17d30788af864144f8e6d1d11cdb71b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2630210911226659865}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3447809781505186996
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -937,80 +1013,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d7b5068e51463f14db951535b0d4ab92,
     type: 3}
   m_PrefabInstance: {fileID: 3447809781505186996}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &3739010051221573610
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 3819529153651754275}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 1836087be4d49d1419704ab452f17a68,
-        type: 3}
-      propertyPath: m_Name
-      value: Syl_CorvetteZ06_Body
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1836087be4d49d1419704ab452f17a68, type: 3}
---- !u!4 &3776576879407933441 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1836087be4d49d1419704ab452f17a68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3739010051221573610}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3998782263789284445
 PrefabInstance:

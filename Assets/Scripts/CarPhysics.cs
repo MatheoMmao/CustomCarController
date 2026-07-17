@@ -72,6 +72,10 @@ public class CarPhysics : MonoBehaviour
     Vector3 wheelBase;
     #endregion
 
+    [SerializeField]GameObject visualSteeringWheel;
+    [SerializeField]float AngleSteeringWheel = 90f;
+    Vector3 visualSteeringStartRotation;
+
     float directionInput = 0f;
 
 
@@ -86,6 +90,8 @@ public class CarPhysics : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         CalculateWheelBase();
+
+        visualSteeringStartRotation = visualSteeringWheel.transform.rotation.eulerAngles;
     }
 
     private void Update()
@@ -349,5 +355,7 @@ public class CarPhysics : MonoBehaviour
         {
             wc.SetSteerInputState(newSteerInput);
         }
+
+        visualSteeringWheel.transform.localRotation = Quaternion.Euler(visualSteeringStartRotation + new Vector3(0, 0, -newSteerInput * AngleSteeringWheel));
     }
 }
