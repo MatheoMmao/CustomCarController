@@ -105,6 +105,7 @@ public class MyWheelCollider : MonoBehaviour
     float upForce;
     float rightForce;
     float forwardForce;
+    float steerInputState = 0f;
     #endregion
 
     private void Awake()
@@ -221,11 +222,11 @@ public class MyWheelCollider : MonoBehaviour
         grounded = false;
         hasRaycastHit = false;
 
-        if (Physics.Raycast(ray, out hit, springLength + wheelRadius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hit, springLength + wheelRadius, ~0, QueryTriggerInteraction.Ignore))
         {
             hasRaycastHit = true;
 
-            if (hit.distance < Mathf.Abs(tireTransform.position.y) /*+ springLength*/ + wheelRadius)
+            if (hit.distance < Mathf.Abs(tireTransform.position.y) + springLength + wheelRadius)
             {
                 grounded = true;
             }
@@ -288,7 +289,7 @@ public class MyWheelCollider : MonoBehaviour
         // Temporary steer and resistance force
         if (steerable)
         {
-            float steerAngle = Input.GetAxis("Horizontal") * maxAngleSteer;
+            float steerAngle = steerInputState * maxAngleSteer;
 
             tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
         }
@@ -320,7 +321,7 @@ public class MyWheelCollider : MonoBehaviour
 
         if (steerable)
         {
-            float steerAngle = Input.GetAxis("Horizontal") * maxAngleSteer;
+            float steerAngle = steerInputState * maxAngleSteer;
 
             tireTransform.localRotation = Quaternion.Euler(0, steerAngle, 0);
         }
@@ -477,4 +478,6 @@ public class MyWheelCollider : MonoBehaviour
         }
             return false;
     }
+
+    public void SetSteerInputState(float newSteerInputState)=>steerInputState=newSteerInputState;
 }

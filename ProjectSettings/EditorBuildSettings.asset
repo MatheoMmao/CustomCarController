@@ -8,5 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TrackAsset.unity
     guid: 117cfaa550232b54190805904a4eb394
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: f64582428bb21474898344ce50248fc7,
+      type: 2}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 36ed4c74776dccf499b420d95c5b63c5,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: f102334876e58ba4c94c09aaf39d3fbc,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: c250c16c366a5bc43bdb22b3b31f1dd1,
+      type: 2}
   m_UseUCBPForAssetBundles: 0

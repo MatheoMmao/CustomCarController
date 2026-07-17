@@ -25,7 +25,7 @@ public class CarPhysics : MonoBehaviour
     [SerializeField] 
     float speedChangeThrottleValue = 1f;
     [SerializeField, Range(0f, 1f)] 
-    float breakValue;
+    float brakingValue;
     [SerializeField] 
     float speedChangeBreakValue = 1f;
     #endregion
@@ -72,6 +72,8 @@ public class CarPhysics : MonoBehaviour
     Vector3 wheelBase;
     #endregion
 
+    float directionInput = 0f;
+
 
     Vector3 lastFrameVelocity = Vector3.zero;
     Vector3 lastFrameAcceleration = Vector3.zero;
@@ -94,29 +96,31 @@ public class CarPhysics : MonoBehaviour
             gearRatio *= -1;
         }
 
-        float directionInput = Input.GetAxisRaw("Vertical");
+        float directionInput = this.directionInput;
 
         // Delay the inputs to avoid sharp inputs on keyboard
-        if (directionInput == 1 && throttleValue < 1)
-        {
-            throttleValue += speedChangeThrottleValue * Time.deltaTime;
-        }
-        else if (directionInput <= 0 && throttleValue > 0)
-        {
-            throttleValue -= speedChangeThrottleValue * Time.deltaTime;
-        }
+        //if (directionInput == 1 && throttleValue < 1)
+        //{
+        //    throttleValue += speedChangeThrottleValue * Time.deltaTime;
+        //}
+        //else if (directionInput <= 0 && throttleValue > 0)
+        //{
+        //    throttleValue -= speedChangeThrottleValue * Time.deltaTime;
+        //}
 
-        if (directionInput == -1 && breakValue < 1)
-        {
-            breakValue += speedChangeBreakValue * Time.deltaTime;
-        }
-        else if (directionInput >= 0 && breakValue > 0)
-        {
-            breakValue -= speedChangeBreakValue * Time.deltaTime;
-        }
+        //if (directionInput == -1 && breakValue < 1)
+        //{
+        //    breakValue += speedChangeBreakValue * Time.deltaTime;
+        //}
+        //else if (directionInput >= 0 && breakValue > 0)
+        //{
+        //    breakValue -= speedChangeBreakValue * Time.deltaTime;
+        //}
+
+        throttleValue = 
 
         throttleValue = Mathf.Clamp(throttleValue, 0, 1);
-        breakValue = Mathf.Clamp(breakValue, 0, 1);
+        brakingValue = Mathf.Clamp(brakingValue, 0, 1);
     }
 
     private void FixedUpdate()
@@ -145,11 +149,11 @@ public class CarPhysics : MonoBehaviour
 
             wheelTorque = CalculateWheelTorque(engineTorque, gearRatio, differentialRatio, transmissionEfficiency);
             collider.SetWheelTorque(wheelTorque);
-            collider.SetBreakValue(breakValue);
+            collider.SetBreakValue(brakingValue);
         }
 
         // Display speed debug waiting for ui (km/h)
-        Debug.Log(rb.linearVelocity.magnitude * 3.6f);
+        //Debug.Log(rb.linearVelocity.magnitude * 3.6f);
     }
 
 #if UNITY_EDITOR
@@ -333,5 +337,17 @@ public class CarPhysics : MonoBehaviour
         float h = comLocal.y - lowestYLocal;
 
         return h;
+    }
+
+    public void SetThrottleValue(float newThrottleValue)=>throttleValue = newThrottleValue;
+
+    public void SetBrakingValue(float newBrakingValue)=>brakingValue = newBrakingValue;
+
+    public void SetSteerInput(float newSteerInput)
+    {
+        foreach (var wc in wheelColliders)
+        {
+            wc.SetSteerInputState(newSteerInput);
+        }
     }
 }
