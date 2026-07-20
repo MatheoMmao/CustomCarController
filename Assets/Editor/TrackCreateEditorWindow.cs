@@ -73,6 +73,8 @@ public class TrackCreateEditorWindow : EditorWindow
 
             if (editWindow != null)
             {
+                if (!Track.GetComponent<MeshFilter>()) Track.AddComponent<MeshFilter>();
+                if (!Track.GetComponent<MeshRenderer>()) Track.AddComponent<MeshRenderer>();
                 editWindow.SetNewTrack(Track);
             }
         }
@@ -106,7 +108,7 @@ public class TrackCreateEditorWindow : EditorWindow
         for (int i = 1; i < bezierDots.Count; i++)
         {
             Vector3[] arrayBezier = Handles.MakeBezierPoints(bezierDots[i - 1].localPosition, bezierDots[i].localPosition,
-                -bezierDots[i - 1].localScale*2 + bezierDots[i - 1].localPosition, bezierDots[i].localScale*2 + bezierDots[i].localPosition, accuracy);
+                -bezierDots[i - 1].localScale * 2 + bezierDots[i - 1].localPosition, bezierDots[i].localScale * 2 + bezierDots[i].localPosition, accuracy);
 
             for (int y = 0; y < arrayBezier.Length; y++)
             {
@@ -115,34 +117,61 @@ public class TrackCreateEditorWindow : EditorWindow
             }
         }
 
-        int idTrackPart = 0;
-        for (int i = 1; i < checkPointsTrack.Count; i++)
+        MeshBuilder mb = new MeshBuilder();
+
+        Vector3 previousForward = Vector3.zero;
+        Vector3 previousRight = Vector3.zero;
+        Vector3 previousPos = Vector3.zero;
+
+        float width = 10;
+
+        for (int i = 0; i < checkPointsTrack.Count; i++)
         {
-            Vector3 gapPoints = (checkPointsTrack[i] - checkPointsTrack[i - 1]);
-            Vector3 centerPosition = checkPointsTrack[i - 1] + gapPoints * 0.5f;
-
-            Vector3 gapPointNorm = gapPoints.normalized;
-            float angle = Mathf.Atan2(gapPointNorm.x, gapPointNorm.z) * Mathf.Rad2Deg;
-
-            if (idTrackPart < trackParts.Count)
+            if (i == 0 && i < checkPointsTrack.Count - 1)
             {
-                trackParts[idTrackPart].transform.localPosition = centerPosition;
-                trackParts[idTrackPart].transform.localRotation = Quaternion.Euler(0,angle, 0);
-                trackParts[idTrackPart].transform.localScale = new Vector3(1, 1, gapPoints.magnitude / 10+1);
+                previousForward = checkPointsTrack[i] - checkPointsTrack[i + 1];
+                previousRight = Vector3.Cross(Vector3.up, previousForward).normalized;
+                previousPos = checkPointsTrack[i] - previousRight / 2;
+                continue;
             }
-            else
-            {
-                trackParts.Add(Instantiate(trackPartPrefab, centerPosition, Quaternion.Euler(0, angle, 0)));
-                trackParts[idTrackPart].transform.SetParent(Track.transform,false);
-                trackParts[idTrackPart].transform.localScale = new Vector3(1, 1, gapPoints.magnitude / 10 + 1);
-            }
-            idTrackPart++;
+            Vector3 forward = i < checkPointsTrack.Count-1 ? checkPointsTrack[i] - checkPointsTrack[i + 1] : previousForward;
+
+            Vector3 mixForward = previousForward + forward;
+
+            Vector3 right = Vector3.Cross(Vector3.up, mixForward).normalized;
+
+            Vector3 pos = checkPointsTrack[i] - right/2;
+
+            mb.BuildQuad(previousPos, previousPos + previousRight*width, pos + right*width, pos, Vector3.up);
+
+            previousRight = right;
+            previousForward = forward;
+            previousPos = pos;
         }
 
-        while (trackParts.Count > idTrackPart)
+        MeshFilter filter = Track.GetComponent<MeshFilter>();
+        MeshCollider collider = Track.GetComponent<MeshCollider>();
+
+        Mesh mesh = mb.CreateMesh();
+
+        if (filter)
         {
-            DestroyImmediate(trackParts[idTrackPart]);
-            trackParts.RemoveAt(idTrackPart);
+            filter.sharedMesh = mesh;
         }
+        if (collider)
+        {
+            collider.sharedMesh = mesh;
+        }
+
+        AssetDatabase.CreateAsset(mesh, $"Assets/GeneratedTracks/{Track.name}.asset");
+        AssetDatabase.SaveAssets();
+
+
+
+        //while (trackParts.Count > idTrackPart)
+        //{
+        //    DestroyImmediate(trackParts[idTrackPart]);
+        //    trackParts.RemoveAt(idTrackPart);
+        //}
     }
 }
