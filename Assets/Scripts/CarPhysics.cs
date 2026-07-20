@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -53,7 +54,8 @@ public class CarPhysics : MonoBehaviour
     #region Transmission
     [Header("Transmission")]
     [SerializeField] 
-    float gearRatio = 2.66f;
+    List<float> gearRatio = new List<float> { -2.66f,2.66f};
+    int gearId = 1;
     [SerializeField] 
     float differentialRatio = 3.42f;
     [SerializeField, Range(0f, 1f)] 
@@ -96,12 +98,6 @@ public class CarPhysics : MonoBehaviour
 
     private void Update()
     {
-        // Debug Reverse Input
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            gearRatio *= -1;
-        }
-
         float directionInput = this.directionInput;
 
         // Delay the inputs to avoid sharp inputs on keyboard
@@ -137,7 +133,7 @@ public class CarPhysics : MonoBehaviour
         wheelsRPM = CalculateWheelRPM();
 
         // Compute the engine torque depending on the wheelsRPM
-        RPM = CalculateEngineRPM(wheelsRPM, gearRatio, differentialRatio);
+        RPM = CalculateEngineRPM(wheelsRPM, gearRatio[gearId], differentialRatio);
         RPM = Mathf.Clamp(RPM, minEngineRPM, maxEngineRPM);
         engineTorque = GetEngineTorque(RPM, throttleValue);
 
@@ -153,7 +149,7 @@ public class CarPhysics : MonoBehaviour
             float loadSupported = CalculateWheelLoadSupported(wheelPosLocal);
             collider.SetLoadSupported(loadSupported);
 
-            wheelTorque = CalculateWheelTorque(engineTorque, gearRatio, differentialRatio, transmissionEfficiency);
+            wheelTorque = CalculateWheelTorque(engineTorque, gearRatio[gearId], differentialRatio, transmissionEfficiency);
             collider.SetWheelTorque(wheelTorque);
             collider.SetBreakValue(brakingValue);
         }
@@ -357,5 +353,23 @@ public class CarPhysics : MonoBehaviour
         }
 
         visualSteeringWheel.transform.localRotation = Quaternion.Euler(visualSteeringStartRotation + new Vector3(0, 0, -newSteerInput * AngleSteeringWheel));
+    }
+
+    public void UpShift()
+    {
+        gearId++;
+        if (gearId >= gearRatio.Count)
+        {
+            gearId = gearRatio.Count - 1;
+        }
+    }
+
+    public void DownShift()
+    {
+        gearId--;
+        if (gearId < 0)
+        {
+            gearId = 0;
+        }
     }
 }

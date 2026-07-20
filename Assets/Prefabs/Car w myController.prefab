@@ -129,7 +129,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  gearRatio: 2.66
+  gearRatio:
+  - -2.66
+  - 2.66
   differentialRatio: 3.42
   transmissionEfficiency: 0.7
   wheelColliders:

@@ -8,6 +8,8 @@ public class RegisterInputs : MonoBehaviour
     [SerializeField] InputActionReference accelerationAction;
     [SerializeField] InputActionReference brakingAction;
     [SerializeField] InputActionReference steerAction;
+    [SerializeField] InputActionReference upShiftAction;
+    [SerializeField] InputActionReference downShiftAction;
 
     public bool overrideSteering = false;
 
@@ -68,6 +70,24 @@ public class RegisterInputs : MonoBehaviour
                 {
                     SetSteeringValue(0);
                 }
+            }
+        };
+
+        upShiftAction.action.Enable();
+        upShiftAction.action.performed += (_) =>
+        {
+            if (controlledCar != null)
+            {
+                controlledCar.UpShift();
+            }
+        };
+
+        downShiftAction.action.Enable();
+        downShiftAction.action.performed += (_) =>
+        {
+            if (controlledCar != null)
+            {
+                controlledCar.DownShift();
             }
         };
     }
