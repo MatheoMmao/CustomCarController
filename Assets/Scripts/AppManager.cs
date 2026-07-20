@@ -47,7 +47,7 @@ public class AppManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SetPCMode();
+        SetVRMode();
     }
 
     [ContextMenu("Set VR Mode")]
