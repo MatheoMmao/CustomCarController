@@ -12,6 +12,11 @@ public class VrControllerWheel : MonoBehaviour
        inputs = FindAnyObjectByType<RegisterInputs>();
     }
 
+    private void OnDisable()
+    {
+        inputs.overrideSteering = false;
+    }
+
     private void Update()
     {
         if (leftController.activeInHierarchy && rightController.activeInHierarchy)

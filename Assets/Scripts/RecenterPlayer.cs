@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,10 +19,23 @@ public class RecenterPlayer : MonoBehaviour
         m_actionReference.action.performed += (_) => Recenter();
     }
 
-    void Recenter()
+    public void Recenter()
     {
         m_XROrigin.MoveCameraToWorldLocation(m_point.position);
 
         m_XROrigin.MatchOriginUpCameraForward(m_point.up, m_point.forward);
+    }
+
+
+    public void DelayRecenter()
+    {
+        StartCoroutine(RecenterCoroutine());
+    }
+
+    public IEnumerator RecenterCoroutine()
+    {
+        yield return null;
+
+        Recenter();
     }
 }
