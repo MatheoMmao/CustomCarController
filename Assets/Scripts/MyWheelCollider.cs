@@ -157,10 +157,10 @@ public class MyWheelCollider : MonoBehaviour
     {
         // Draw suspention length and wheel rest position
         // to help place the collider and visual wheel correctly
-        //Handles.DrawWireDisc(transform.position - springLength * restRatio * transform.up,
-        //                     transform.right, wheelRadius);
+        Handles.DrawWireDisc(transform.position - springLength * restRatio * transform.up,
+                             transform.right, wheelRadius);
 
-        //Handles.DrawLine(transform.position, transform.position - springLength * transform.up);
+        Handles.DrawLine(transform.position, transform.position - springLength * transform.up);
 
         if (!debugWheel)
             return;
@@ -201,7 +201,6 @@ public class MyWheelCollider : MonoBehaviour
 
     void OnGUI()
     {
-            return;
         if (!debugWheel)
         {
         }
@@ -217,16 +216,19 @@ public class MyWheelCollider : MonoBehaviour
     void CheckGroundedState()
     {
         Ray ray = new Ray(transform.position, -transform.up);
+        float maxRayDistance = springLength + wheelRadius;
 
         // Reset states
         grounded = false;
         hasRaycastHit = false;
 
-        if (Physics.Raycast(ray, out hit, springLength + wheelRadius, ~0, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hit, maxRayDistance, ~0, QueryTriggerInteraction.Ignore))
         {
             hasRaycastHit = true;
 
-            if (hit.distance < Mathf.Abs(tireTransform.position.y) + springLength + wheelRadius)
+            float currentSpringLength = hit.distance - wheelRadius;
+
+            if (currentSpringLength < springLength)
             {
                 grounded = true;
             }
@@ -374,12 +376,13 @@ public class MyWheelCollider : MonoBehaviour
 
 
     /// <summary>
-    /// Wheel suspension force (Seems like it has some weird behaviour, need to check ASAP)
+    /// Wheel suspension force
     /// </summary>
     void UpdateWheelSuspensionForce()
     {
         upForce = 0f;
-        if (hasRaycastHit)
+
+        if (hasRaycastHit && grounded)
         {
             float targetLength = hit.distance - wheelRadius;
             targetLength = Mathf.Clamp(targetLength, minSpringLength, springLength);
@@ -400,9 +403,9 @@ public class MyWheelCollider : MonoBehaviour
             }
 
             // visual wheel set to ground position
-            if (grounded && suspensionForce > 0)
+            if (grounded)
             {
-                wheelTransform.localPosition = wheelVisualStartLocalPos + (wheelRadius - hit.distance) * Vector3.up;
+                wheelTransform.localPosition = wheelVisualStartLocalPos + targetLength * Vector3.down;
             }
 
             currentLength = targetLength;
@@ -411,9 +414,8 @@ public class MyWheelCollider : MonoBehaviour
         {
             // no suspension force in air
 
-            // visual wheel drop to rest position
-            Vector3 restPos = transform.position - transform.up * restLength;
-            wheelTransform.position = restPos;
+            // visual wheel drop to spring length position
+            wheelTransform.localPosition = wheelVisualStartLocalPos + Vector3.down * springLength;
         }
     }
 
