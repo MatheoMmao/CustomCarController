@@ -124,7 +124,10 @@ public class MyWheelCollider : MonoBehaviour
 
         if (wheelTransform != null)
         {
-            wheelVisualStartLocalPos = wheelTransform.localPosition + Vector3.up * restLength; // save starting position
+            Vector3 initialWheelWorldPos = wheelTransform.position;
+            Vector3 topMountWorldPos = initialWheelWorldPos + transform.up * restLength;
+            wheelVisualStartLocalPos = transform.parent.InverseTransformPoint(topMountWorldPos);
+
             wheelVisualStartRotation = wheelTransform.localRotation.eulerAngles;
         }
         else
@@ -405,7 +408,8 @@ public class MyWheelCollider : MonoBehaviour
             // visual wheel set to ground position
             if (grounded)
             {
-                wheelTransform.localPosition = wheelVisualStartLocalPos + targetLength * Vector3.down;
+                Vector3 mountWorldPos = transform.parent.TransformPoint(wheelVisualStartLocalPos);
+                wheelTransform.position = mountWorldPos - transform.up * targetLength;
             }
 
             currentLength = targetLength;
@@ -415,7 +419,8 @@ public class MyWheelCollider : MonoBehaviour
             // no suspension force in air
 
             // visual wheel drop to spring length position
-            wheelTransform.localPosition = wheelVisualStartLocalPos + Vector3.down * springLength;
+            Vector3 mountWorldPos = transform.parent.TransformPoint(wheelVisualStartLocalPos);
+            wheelTransform.position = mountWorldPos - transform.up * springLength;
         }
     }
 

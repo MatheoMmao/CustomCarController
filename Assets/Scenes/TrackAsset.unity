@@ -1303,6 +1303,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Car w myController
       objectReference: {fileID: 0}
+    - target: {fileID: 445412851923786658, guid: a9b478ab47869f746a161ea950ac9b7a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3819529153651754275, guid: a9b478ab47869f746a161ea950ac9b7a,
         type: 3}
       propertyPath: m_LocalPosition.x
