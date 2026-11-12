@@ -1107,6 +1107,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "dfeb8026-8cdc-4c02-8200-fb04d8dc03f3",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Acceleration",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Arrows",
                     "id": "18122734-3b38-4be5-a6ee-effc4d8fe14c",
                     "path": "2DVector",
@@ -1229,6 +1240,17 @@
                 },
                 {
                     "name": "",
+                    "id": "3f520273-a07b-48fc-90b5-1c7f2b457a03",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "df3574fd-920c-45e8-80d1-e4ad087298be",
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
@@ -1262,6 +1284,17 @@
                 },
                 {
                     "name": "",
+                    "id": "fad2e0f3-5f05-4e3d-8abc-5bfb09165c05",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Braking",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "880a1839-6242-4ec4-977e-412e492cda9a",
                     "path": "<Keyboard>/e",
                     "interactions": "",
@@ -1284,6 +1317,17 @@
                 },
                 {
                     "name": "",
+                    "id": "2f727c5c-b492-4bef-acfd-680c757768b9",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpShift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "29ff8c6e-62ad-4b4b-ab81-79ab2820eee7",
                     "path": "<Keyboard>/q",
                     "interactions": "",
@@ -1297,6 +1341,17 @@
                     "name": "",
                     "id": "a8eb47cf-1529-4ffb-bc49-e11063bd68c9",
                     "path": "<XRController>{LeftHand}/{GripButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DownShift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6bfed647-80cf-47b2-93b6-4071a04bd307",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
