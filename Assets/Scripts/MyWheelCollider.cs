@@ -85,6 +85,7 @@ public class MyWheelCollider : MonoBehaviour
     public TireCoefficients longitudinalCoefficients;
 
     Transform tireTransform;
+    private Vector3 tireStartLocalOffset;
     private Vector3 wheelVisualStartLocalPos;
     Vector3 wheelVisualStartRotation;
     float wheelRPM = 0;
@@ -116,9 +117,10 @@ public class MyWheelCollider : MonoBehaviour
         // Create a gameobject to represent the tire transform (used to separate visual and physics calculations
         GameObject tireGo = new GameObject();
         tireTransform = tireGo.transform;
-        tireTransform.position = wheelTransform.position;
+        tireTransform.position = transform.position;
         tireTransform.rotation = transform.rotation;
         tireTransform.SetParent(transform.parent);
+        tireStartLocalOffset = transform.InverseTransformPoint(tireTransform.position);
 
         lastFramePos = tireTransform.position;
 
@@ -138,6 +140,9 @@ public class MyWheelCollider : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 localOffset = new Vector3(tireStartLocalOffset.x, tireStartLocalOffset.y - currentLength, tireStartLocalOffset.z);
+        tireTransform.position = transform.TransformPoint(localOffset);
+
         CalculateTireVelocity();
         CheckGroundedState();
         UpdateWheelSuspensionForce();
@@ -181,13 +186,23 @@ public class MyWheelCollider : MonoBehaviour
         Handles.ArrowHandleCap(0, wheelTransform.position, Quaternion.LookRotation(transform.forward, transform.up), forwardForce / 8000, EventType.Repaint);
         Handles.color = color;
 
+        if (tireTransform)
+        {
+            // Wheel axle Center
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(tireTransform.position, 0.05f);
+
+            // ground contact point
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(tireTransform.position - transform.up * wheelRadius, 0.04f);
+        }
+
         //Draw lateral force curve
         Vector3 lastPoint = transform.position;
         float normalForce = 4000f;
 
         Gizmos.color = Color.green;
         bool first = true;
-
         //for (float angle = -20f; angle <= 20f; angle += 0.5f)
         //{
         //    float force = CalculatePacejkaForce(angle, normalForce, lateralCoefficients);
@@ -445,9 +460,7 @@ public class MyWheelCollider : MonoBehaviour
 
     void CalculateTireVelocity()
     {
-        tireVel = (tireTransform.position - lastFramePos) / Time.fixedDeltaTime;
-
-        lastFramePos = tireTransform.position;
+        tireVel = carRigidbody.GetPointVelocity(tireTransform.position);
     }
 
     public bool IsMotorized()
